@@ -1,0 +1,1 @@
+<div class="avatar"><img src="<%= user.avatar_url %>" title="<%= user.name %>"/></div>

@@ -1,0 +1,5 @@
+<div class="address">
+  <p><%= user.address1 %></p>
+  <p><%= user.address2 %></p>
+  <p><%= user.city %> <%= user.state %> <%= user.zip %></p>
+</div>
