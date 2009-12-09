@@ -9,8 +9,9 @@
   <script type="text/javascript" src="../lib/consolex.js"></script>
   <link rel="stylesheet" type="text/css" href="../lib/jasmine.css"/>
 
-<!-- <script src="../lib/jquery-1.3.2.js" type="text/javascript" charset="utf-8"></script> -->
+  <script src="../lib/prototype.js" type="text/javascript" charset="utf-8"></script>
   <script src="../src/jerb.js" type="text/javascript" charset="utf-8"></script>
+  <script src="../src/prototype.jerb.js" type="text/javascript" charset="utf-8"></script>
 
   <!-- sample templates -->
   <link name="user.address" rel="jerb" type="text/jerb" href="address.jerb">
@@ -21,6 +22,7 @@
 
   <script type="text/javascript">
     jasmine.include('spec/jerb_spec.js', true);
+    jasmine.include('spec/loading_embded_jerbs_spec.js', true);
   </script>
 </head>
 <body>
