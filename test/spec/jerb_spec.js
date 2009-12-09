@@ -52,6 +52,25 @@ describe('JERB', function () {
       expect( JERB.render('recipient.greeting', {first_name:'Jared'}) ).toEqual("hello Jared Grippe");
     });
 
+    it('should be able to reference the scope via scope', function(){
+      var data = {};
+      data["first name"] = "Peter";
+      expect(new JERB('<%= scope["first name"] %>').render(data)).toEqual('Peter');
+    });
+
+    it('should be able to reference the scope via this', function(){
+      var data = {};
+      data["first name"] = "Peter";
+      expect(new JERB('<%= this["first name"] %>').render(data)).toEqual('Peter');
+    });
+
+    it('should be able to run for loops',function(){
+      var jerb = new JERB(''+
+        '<% for (var i=0; i < services.length; i++) { %>'+
+          '<%= services[i] %>,'+
+        '<% }; %>');
+      expect( jerb.render({services:['a','b','c']}) ).toEqual('a,b,c,');
+    });
 
   });
 

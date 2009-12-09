@@ -94,7 +94,7 @@
       for (var property in arguments[i])
         scope[property] = arguments[i][property];
 
-    return this.evaluate(scope);
+    return this.evaluate.call(scope, scope);
   };
 
   JERB.prototype.methods = {
