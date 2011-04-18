@@ -18,27 +18,35 @@
     var SINGLE_QUOTES = /'/g;
 
     function concat(string){
-      return "__buffer__ += '"+string.replace(NEWLINES,'\\n').replace(SINGLE_QUOTES,"\\'")+"'; ";
+      return "__buffer__ += '"+String(string).replace(NEWLINES,'\\n').replace(SINGLE_QUOTES,"\\'")+"'; ";
     }
     function exec_and_concat(code){
       return "__buffer__ += "+code+"; ";
+    }
+    function exec_escape_and_concat(code){
+      return "__buffer__ += h("+code+"); ";
     }
     function exec(code){
       return code+"; ";
     }
 
     return function compile(source, tag){
-      var code = ""+
+      var code =
         "scope.__buffer__ = '';"+
         "with(scope){";
 
       var t = String(tag).replace(REGEX_ESCAPE, '\\$1');
-      var matcher = new RegExp("<"+t+"(=?)\s*(.*?)\s*"+t+">");
+      var matcher = new RegExp("<"+t+"(=h|=)?\s*(.*?)\s*"+t+">");
 
       while (source.length > 0) {
         if (match = source.match(matcher) ) {
           code += concat(source.slice(0, match.index));
-          code += (match[1] == '=') ? exec_and_concat(match[2]) : exec(match[2]);
+
+          code +=
+            (match[1] == '=h') ? exec_escape_and_concat(match[2]) :
+            (match[1] == '=' ) ? exec_and_concat(match[2]) :
+            exec(match[2]);
+
           source = source.slice(match.index + match[0].length);
         }else{
           code += concat(source);
@@ -46,7 +54,7 @@
         }
       }
 
-      code += ""+
+      code +=
         "return __buffer__;"+
       "}";
 
@@ -56,6 +64,7 @@
   })();
 
   function JERB(source, tag){
+    if (this === global) return new JERB(source, tag);
     this.source = String(source);
     this.scope = {};
     if (tag) this.tag = tag;
@@ -107,6 +116,13 @@
       scopes.unshift(this);
       scopes.unshift(name_or_jerb);
       return JERB.render.apply(JERB, scopes);
+    },
+    h: function(string){
+      return String(string)
+        .replace(/&/g, '&amp;' )
+        .replace(/</g, '&lt;'  )
+        .replace(/>/g, '&gt;'  )
+        .replace(/"/g, '&quot;');
     }
   };
 
